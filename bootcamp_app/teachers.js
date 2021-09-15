@@ -1,4 +1,7 @@
 const args = process.argv.slice(2);
+const cohortName = args[0];
+const values = [`%${cohortName}%`];
+
 const { Pool } = require('pg');
 
 const pool = new Pool({
@@ -14,9 +17,9 @@ FROM teachers
 JOIN assistance_requests on teachers.id = teacher_id
 JOIN students on students.id = student_id
 JOIN cohorts on cohorts.id = cohort_id
-WHERE cohorts.name = '${args[0]}'
+WHERE cohorts.name LIKE $1
 ORDER BY teachers.name;
-`)
+`, values)
 // .then(res => { console.log(res.rows)})
 .then(res => {
   res.rows.forEach(obj => {
